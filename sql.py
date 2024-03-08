@@ -44,5 +44,5 @@ def insert(usr, pas, con):
         print("IntegrityError occurred:", e)
         print("User already exists: " + usr)
     except Error as e:
-        print ("Error occurred:", e)
+        print("Error occurred:", e)
 

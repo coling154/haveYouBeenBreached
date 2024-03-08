@@ -23,6 +23,7 @@ def write_to_db(file):
             # Print out data
             print(user, password)
         DBcon.close()
+    file.close()
 
 
 if __name__ == '__main__':
