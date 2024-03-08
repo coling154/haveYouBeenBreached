@@ -31,7 +31,7 @@ def insert(usr, pas, con):
     Insert data into the database
 
     :param usr: String with the username
-    :param pas: String with the password (hashed)
+    :param pas: String with the password
     :param con: Connection object
     """
     connection = con
