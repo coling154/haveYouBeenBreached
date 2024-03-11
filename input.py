@@ -10,6 +10,7 @@ import time
 file1 = "../data/credentials1.txt"
 file2 = "../data/credentials2.txt"
 
+
 def write_to_db(file):
     DBcon = sql.connect()
     with open(file, 'r', encoding='utf-8') as file:
@@ -23,7 +24,6 @@ def write_to_db(file):
             # Print out data
             print(user, password)
         DBcon.close()
-    file.close()
 
 
 if __name__ == '__main__':
@@ -32,4 +32,3 @@ if __name__ == '__main__':
     write_to_db(file2)
     endTime = time.time()
     print("Total time: " + str(endTime - startTime))
-

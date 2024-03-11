@@ -8,6 +8,7 @@ such as inserting and searching the data
 import mysql.connector
 from mysql.connector import IntegrityError, Error
 
+
 def connect():
     """
     Connect to the database
@@ -44,5 +45,4 @@ def insert(usr, pas, con):
         print("IntegrityError occurred:", e)
         print("User already exists: " + usr)
     except Error as e:
-        print("Error occurred:", e)
-
+        print ("Error occurred:", e)
