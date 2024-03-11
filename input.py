@@ -5,7 +5,7 @@ This is for project1 part 1 of EE468
 This script inserts data into the users database from credentials1.txt & credentials2.txt
 """
 import hashlib
-import sql
+from flaskr import sql
 import time
 file1 = "../data/credentials1.txt"
 file2 = "../data/credentials2.txt"

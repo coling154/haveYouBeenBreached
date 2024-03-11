@@ -1,4 +1,4 @@
-DROP DATABASE users;
+DROP DATABASE users IF EXISTS;
 CREATE DATABASE users;
 use users;
 CREATE TABLE users(
