@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        <h1>Got PWNED?</h1>
+        <div class="container">
+            <h2>Enter email or password to check if they are in a data breach</h2>
+            <form method="POST">
+        
+                <input type="email" placeholder="Email" name="value" class="form-input"></input>
+                <label for="email" class="form-label">Email</label>
+
+                <button type="submit" formaction="/checkEmail">Check Email</button>
+                <button type="submit" formaction="/checkPass">Check Password</button>
+            </form>
+        </div>
+    </body>
+</html>

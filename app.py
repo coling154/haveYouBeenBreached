@@ -1,21 +1,32 @@
-"""
-app.py
-Created by Colin Gasiewicz on 03/06/2024
-This is part 2 of the project and contains the frontend of the application
-"""
-import flask
-app = flask.Flask(__name__)
+# App.py
+# Author: Ryan Quirk <ryan.quirk6@protonmail.ch>
+#
+# Description: This is the main flask application. This script
+# initializes the app, and handles all http requests & api calls.
+from flask import Flask, request, render_template, redirect, url_for
+app = Flask(__name__, static_folder="static")
+
+# Landing page for app
+@app.route('/')
+def index():
+   return render_template("landing.html")
+
+# Handles the Check Pass button
+@app.route('/checkPass', methods = ["POST"])
+def checkPass():
+   if request.method == "POST":
+      pwd = request.form['value']
+      print(pwd)
+      redirect(url_for('index'))
+
+# Handles the Check Email button
+@app.route('/checkEmail', methods = ["POST"])
+def checkEmail():
+   if request.method == 'POST':
+      email = request.form['value']
+      print(email)
+      return redirect(url_for('index'))
 
 
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    error = None
-    if flask.method == 'POST':
-        if flask.valid_login(flask.request.form['username'],
-                       flask.request.form['password']):
-            return flask.log_the_user_in(flask.request.form['username'])
-        else:
-            error = 'Invalid username/password'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return flask.render_template('login.html', error=error)
+if __name__ == '__main__':
+   app.run()
