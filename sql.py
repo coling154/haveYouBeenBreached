@@ -46,3 +46,29 @@ def insert(usr, pas, con):
         print("User already exists: " + usr)
     except Error as e:
         print ("Error occurred:", e)
+
+
+def fast_insert(many_params, con):
+    """
+    Insert data into the database the fastest way
+
+    :param many_params: list of user data
+    :param con: Connection object
+    """
+    connection = con
+    cursor = connection.cursor()
+    try:
+        query = "INSERT INTO users (username, password) VALUES (%s, %s)"
+        cursor.executemany(query, many_params)
+        connection.commit()
+    except IntegrityError as e:
+        print("IntegrityError occurred:", e)
+        loop_params(many_params, con)
+    except Error as e:
+        print ("Error occurred:", e)
+        loop_params(many_params, con)
+
+
+def loop_params(params, con):
+    for param in params:
+        insert(param[0], param[1], con)

@@ -26,9 +26,27 @@ def write_to_db(file):
         DBcon.close()
 
 
+def write_to_db2(file):
+    DBcon = sql.connect()
+    with open(file, 'r', encoding='utf-8') as file:
+        buffer = []
+        for line in file:
+            parts = line.split(":")
+            # Hash email and password
+            user = hashlib.sha256(parts[0].encode('utf-8'), usedforsecurity=True).hexdigest()
+            password = hashlib.sha256(parts[1].encode('utf-8'), usedforsecurity=True).hexdigest()
+            if len(buffer) >= 5:
+                sql.fast_insert(buffer, DBcon)
+            tup = (user, password)
+            buffer.append(tup)
+            # Print out data
+            print(user, password)
+        DBcon.close()
+
+
 if __name__ == '__main__':
     startTime = time.time()
-    write_to_db(file1)
-    write_to_db(file2)
+    write_to_db2(file1)
+    write_to_db2(file2)
     endTime = time.time()
     print("Total time: " + str(endTime - startTime))
