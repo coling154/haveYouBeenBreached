@@ -39,8 +39,6 @@ def write_to_db2(file):
                 sql.fast_insert(buffer, DBcon)
             tup = (user, password)
             buffer.append(tup)
-            # Print out data
-            print(user, password)
         DBcon.close()
 
 

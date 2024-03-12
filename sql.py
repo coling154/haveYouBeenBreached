@@ -42,10 +42,9 @@ def insert(usr, pas, con):
         cursor.execute(query, (usr, pas))
         connection.commit()
     except IntegrityError as e:
-        print("IntegrityError occurred:", e)
-        print("User already exists: " + usr)
+        pass
     except Error as e:
-        print ("Error occurred:", e)
+        print("Error occurred:", e)
 
 
 def fast_insert(many_params, con):
@@ -62,10 +61,10 @@ def fast_insert(many_params, con):
         cursor.executemany(query, many_params)
         connection.commit()
     except IntegrityError as e:
-        print("IntegrityError occurred:", e)
+        print("IntegrityError occurred:")
         loop_params(many_params, con)
     except Error as e:
-        print ("Error occurred:", e)
+        print ("Error occurred:")
         loop_params(many_params, con)
 
 
