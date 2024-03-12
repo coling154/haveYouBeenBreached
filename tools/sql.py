@@ -80,8 +80,20 @@ that will be accessed by application.
 """
 
 def checkEmail(email, con):
-    return True
+    cursor = con.cursor()
+    query = f'SELECT username FROM users WHERE username = "{email}" LIMIT 1'
+
+    cursor.execute(query)    
+
+    if cursor.fetchone(): return True
+    else: return False
 
 def checkPassword(pwd, con):
-    return False
+    cursor = con.cursor()
+    query = f'SELECT password FROM users WHERE password = "{pwd}" LIMIT 1'
+
+    cursor.execute(query)    
+
+    if cursor.fetchone(): return True
+    else: return False
 

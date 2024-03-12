@@ -63,6 +63,10 @@ body {
   color:mediumseagreen
 }
 
+.noFill {
+  color: #cc7700 
+}
+
 /* CSS */
 .button-50 {
   appearance: button;
