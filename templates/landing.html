@@ -4,17 +4,30 @@
         <link rel="icon" type="image/png" href="/static/favicon.png" />
     </head>
     <body>
-        <h1>Got PWNED?</h1>
-        <div class="container">
-            <h2>Enter email or password to check if they are in a data breach</h2>
-            <form method="POST">
-        
-                <input type="email" placeholder="Email" name="value" class="form-input"></input>
-                <label for="email" class="form-label">Email</label>
+        <div class="Main">
+            <div class = "input">
+                <h1 id="title" style="border-right-style: solid;border-right-width: 0px;padding-right: 0px;border-bottom-width: 0px;border-bottom-style: solid;padding-bottom: 0px;margin-top: 65px;">Got PWNED?</h1>
+                <div class="container">
+                    <h2 style="margin-left: 40px;">Enter email or password to check if they are in a data breach</h2>
+                    <form method="POST">
+                
+                        <input type="email" placeholder="Email" name="value" class="form-input"></input>
+                        <label for="email" class="form-label">Email</label>
 
-                <button type="submit" formaction="/checkEmail">Check Email</button>
-                <button type="submit" formaction="/checkPass">Check Password</button>
-            </form>
+                        <button class="button-50" type="submit" formaction="/checkEmail">Check Email</button>
+                        <button class="button-50" type="submit" formaction="/checkPass">Check Password</button>
+                    </form>
+                </div>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{category}}">
+                <strong>{{ message }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
         </div>
     </body>
 </html>
