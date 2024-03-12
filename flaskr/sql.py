@@ -74,5 +74,14 @@ def check(usr, pas, con):
         status = 1
     return status
 
+"""
+Adding the skeleton to functions checkEmail and checkPassword
+that will be accessed by application.
+"""
 
+def checkEmail(email, con):
+    return True
+
+def checkPassword(pwd, con):
+    return False
 
