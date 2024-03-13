@@ -17,7 +17,7 @@ def connect():
         conn = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='',
+            password='Poppk456',
             database='users'
         )
         if conn.is_connected():
@@ -96,4 +96,5 @@ def checkPassword(pwd, con):
 
     if cursor.fetchone(): return True
     else: return False
+
 
