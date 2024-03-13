@@ -3,10 +3,10 @@
 #
 # Description: This is the main flask application. This script
 # initializes the app, and handles all http requests & api calls.
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, redirect, flash
+import tools.sql as sql
+from time import time
 import hashlib
-import time
-import sql
 import re
 app = Flask(__name__, static_folder="static")
 
@@ -18,45 +18,70 @@ app.config['SECRET_KEY'] = "secretkey"
 def index():
    return render_template("landing.html")
 
+# Handles the Check Pass button
+@app.route('/checkPass', methods = ["POST"])
+def checkPass():
+   if request.method == "POST":
 
-@app.route('/submit', methods = ["POST"])
-def check():
-   if request.method == 'POST':
-      if request.form['email'] == "" or request.form['password'] == "":
-         flash("ALERT: Please enter email or password", "noFill")
+      # Send alert if form is empty
+      if request.form['value'] == "":
+         flash("ALERT: Please enter email or password", "noFill") 
+         return redirect("/")
+      
+      pwd = request.form['value']
+      pwd = hashlib.sha256(pwd.encode("utf-8")).hexdigest() # Hash the password
+
+      start = time()
+      # If password is in database redirect to according page
+      if sql.checkPassword(pwd, con):
+         end = time()
+         elapsed = end - start
+         print("Process took " + str(elapsed) + "s")
+
+         flash("WARNING: Your password has been breached!", "danger")
+         return redirect("/")
+      else:
+         end = time()
+         elapsed = end - start
+         print("Process took " + str(elapsed) + "s")
+
+         flash("ALL GOOD: Your password has not been breached... live to fight another day", "good")
          return redirect("/")
 
-      email = request.form['email']
-      password = request.form['password']
-      # Hash password
-      password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+# Handles the Check Email button
+@app.route('/checkEmail', methods = ["POST"])
+def checkEmail():
+   if request.method == 'POST':
+
+      # Send alert if form is empty
+      if request.form['value'] == "":
+         flash("ALERT: Please enter email or password", "noFill") 
+         return redirect("/")
+
+      email = request.form['value']
+
       # Use regex to validate if input is a proper email
       if not re.search(r".+@.+\..*", email):
          flash("ALERT: Please enter valid email", "noFill")
          return redirect("/")
 
-      start_time = time.time()
       # Hash the email
-      email = hashlib.sha256(email.encode('utf-8')).hexdigest()
-      # Check email
+      email = hashlib.sha256(email.encode('utf-8')).hexdigest() 
+
+      # If the email is in the database redirect to the according page
+      start = time()
       if sql.checkEmail(email, con):
-         # email is in db
-         if sql.checkPassword(password, con):
-            # password is in db
-            flash("ALERT: Your account has been compromised consider changing passwords and email addresses", "danger")
-            end_time = time.time()
-            app.logger.info(end_time - start_time)
-            return redirect("/")
-         else:
-            # email is in db password is not
-            flash("ALERT: Your email was compromised in the data breach", "danger")
-            end_time = time.time()
-            app.logger.info(end_time - start_time)
-            return redirect("/")
+         end = time()
+         elapsed = end - start
+         print("Process took " + str(elapsed) + "s")
+         flash("WARNING: Your email has been breached!", "danger")
+         return redirect("/")
       else:
-         flash("ALL GOOD: Your email and password have not been breached... live to fight another day", "good")
-         end_time = time.time()
-         app.logger.info(end_time - start_time)
+         end = time()
+         elapsed = end - start
+         print("Process took " + str(elapsed) + "s")
+
+         flash("ALL GOOD: Your email has not been breached... live to fight another day", "good")
          return redirect("/")
 
 
@@ -64,4 +89,4 @@ def check():
 if __name__ == '__main__':
    global con
    con = sql.connect()
-   app.run(debug=True)
+   app.run()
