@@ -5,6 +5,7 @@
 # initializes the app, and handles all http requests & api calls.
 from flask import Flask, request, render_template, redirect, url_for, flash
 import hashlib
+import time
 import sql
 import re
 app = Flask(__name__, static_folder="static")
@@ -17,54 +18,47 @@ app.config['SECRET_KEY'] = "secretkey"
 def index():
    return render_template("landing.html")
 
-# Handles the Check Pass button
-@app.route('/checkPass', methods = ["POST"])
-def checkPass():
-   if request.method == "POST":
 
-      # Send alert if form is empty
-      if request.form['value'] == "":
-         flash("ALERT: Please enter email or password", "noFill") 
-         return redirect("/")
-      
-      pwd = request.form['value']
-      pwd = hashlib.sha256(pwd.encode("utf-8")).hexdigest() # Hash the password
-
-      # If password is in database redirect to according page
-      if sql.checkPassword(pwd, con):
-         flash("WARNING: Your password has been breached!", "danger")
-         return redirect("/")
-      else:
-         flash("ALL GOOD: Your password has not been breached... live to fight another day", "good")
-         return redirect("/")
-
-# Handles the Check Email button
-@app.route('/checkEmail', methods = ["POST"])
-def checkEmail():
+@app.route('/submit', methods = ["POST"])
+def check():
    if request.method == 'POST':
-
-      # Send alert if form is empty
-      if request.form['value'] == "":
-         flash("ALERT: Please enter email or password", "noFill") 
+      if request.form['email'] == "" or request.form['password'] == "":
+         flash("ALERT: Please enter email or password", "noFill")
          return redirect("/")
 
-      email = request.form['value']
-
+      email = request.form['email']
+      password = request.form['password']
+      # Hash password
+      password = hashlib.sha256(password.encode('utf-8')).hexdigest()
       # Use regex to validate if input is a proper email
       if not re.search(r".+@.+\..*", email):
          flash("ALERT: Please enter valid email", "noFill")
          return redirect("/")
 
+      start_time = time.time()
       # Hash the email
-      email = hashlib.sha256(email.encode('utf-8')).hexdigest() 
-
-      # If the email is in the database redirect to the according page
+      email = hashlib.sha256(email.encode('utf-8')).hexdigest()
+      # Check email
       if sql.checkEmail(email, con):
-         flash("WARNING: Your email has been breached!", "danger")
-         return redirect("/")
+         # email is in db
+         if sql.checkPassword(password, con):
+            # password is in db
+            flash("ALERT: Your account has been compromised consider changing passwords and email addresses", "danger")
+            end_time = time.time()
+            app.logger.info(end_time - start_time)
+            return redirect("/")
+         else:
+            # email is in db password is not
+            flash("ALERT: Your email was compromised in the data breach", "danger")
+            end_time = time.time()
+            app.logger.info(end_time - start_time)
+            return redirect("/")
       else:
-         flash("ALL GOOD: Your email has not been breached... live to fight another day", "good")
+         flash("ALL GOOD: Your email and password have not been breached... live to fight another day", "good")
+         end_time = time.time()
+         app.logger.info(end_time - start_time)
          return redirect("/")
+
 
 
 if __name__ == '__main__':
