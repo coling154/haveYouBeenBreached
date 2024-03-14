@@ -18,6 +18,8 @@
                     </form>
                 </div>
             </div>
+            <!---Below handles the flash messages, set by app.py --->
+            <!--The flash messages are the alert messages that inform users the results of their query-->
             {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
             {% for category, message in messages %}
